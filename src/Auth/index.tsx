@@ -5,6 +5,8 @@ import CheckBox from "reused/CheckBox";
 import TextInput from "reused/TextInput";
 import { authData, type AuthData } from "./schema";
 import { isObjectEmpty } from "common/utils";
+import ajax from "common/ajax";
+import { authUri } from "common/constants";
 
 const Auth = () => {
   const methods = useForm({
@@ -29,6 +31,16 @@ const Auth = () => {
     }
 
     if (valid?.success && valid?.data) {
+      ajax.post(authUri, valid.data)
+        .then((response) => response.data)
+        .then((data) => {
+          if (data.success) {
+            console.log(data.result)
+          } else {
+            console.error(data.error)
+          }
+        })
+
       console.log(valid.data)
     }
   }
