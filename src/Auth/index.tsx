@@ -35,13 +35,11 @@ const Auth = () => {
         .then((response) => response.data)
         .then((data) => {
           if (data.success) {
-            console.log(data.result)
+            window.location.href = "/"
           } else {
             console.error(data.error)
           }
         })
-
-      console.log(valid.data)
     }
   }
 
