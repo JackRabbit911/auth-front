@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm, type SubmitHandler } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 
 import CheckBox from "reused/CheckBox";
 import TextInput from "reused/TextInput";
-import { authData, type AuthData } from "./schema";
+import { authData } from "./schema";
 import { isObjectEmpty } from "common/utils";
-import ajax from "common/ajax";
-import { authUri } from "common/constants";
+import { onSubmit } from "./utils";
 
 const Auth = () => {
   const methods = useForm({
@@ -22,26 +21,6 @@ const Auth = () => {
   const disabled = !isObjectEmpty(methods.formState.errors) ||
     methods.watch('email') === '' ||
     methods.watch('password') === ''
-
-  const onSubmit: SubmitHandler<AuthData> = (data) => {
-    const valid = authData.safeParse(data)
-
-    if (valid?.error) {
-      console.log(valid.error, data)
-    }
-
-    if (valid?.success && valid?.data) {
-      ajax.post(authUri, valid.data)
-        .then((response) => response.data)
-        .then((data) => {
-          if (data.success) {
-            window.location.href = "/"
-          } else {
-            console.error(data.error)
-          }
-        })
-    }
-  }
 
   return (
     <FormProvider {...methods}>
