@@ -21,7 +21,7 @@ const Auth = () => {
 
   const disabled = !isObjectEmpty(methods.formState.errors) ||
     methods.watch('email') === '' ||
-    methods.watch('password').length < 5
+    methods.watch('password') === ''
 
   const onSubmit: SubmitHandler<AuthData> = (data) => {
     const valid = authData.safeParse(data)
