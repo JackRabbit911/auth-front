@@ -1,1 +1,2 @@
-export const authUri = 'auth'
+export const loginUri = 'auth/login'
+export const getReferenceUri = 'auth'
