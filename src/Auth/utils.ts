@@ -1,7 +1,7 @@
 import type { SubmitHandler } from "react-hook-form"
 import { authData, type AuthData } from "./schema"
 import ajax from "common/ajax"
-import { authUri } from "common/constants"
+import { loginUri } from "common/constants"
 
 export const onSubmit: SubmitHandler<AuthData> = (data) => {
     const valid = authData.safeParse(data)
@@ -11,7 +11,7 @@ export const onSubmit: SubmitHandler<AuthData> = (data) => {
     }
 
     if (valid?.success && valid?.data) {
-      ajax.post(authUri, valid.data)
+      ajax.post(loginUri, valid.data)
         .then((response) => response.data)
         .then((data) => {
           if (data.success) {
