@@ -1,48 +1,12 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm, type SubmitHandler } from "react-hook-form"
+import { FormProvider } from "react-hook-form"
 
 import CheckBox from "reused/CheckBox";
 import TextInput from "reused/TextInput";
-import { authData, type AuthData } from "./schema";
-import { isObjectEmpty } from "common/utils";
-import ajax from "common/ajax";
-import { authUri } from "common/constants";
+import { useAuthForm } from "./hooks";
 
 const Auth = () => {
-  const methods = useForm({
-    resolver: zodResolver(authData),
-    reValidateMode: "onChange",
-    defaultValues: {
-      email: '',
-      password: '',
-      remember: true,
-    },
-  })
-
-  const disabled = !isObjectEmpty(methods.formState.errors) ||
-    methods.watch('email') === '' ||
-    methods.watch('password') === ''
-
-  const onSubmit: SubmitHandler<AuthData> = (data) => {
-    const valid = authData.safeParse(data)
-
-    if (valid?.error) {
-      console.log(valid.error, data)
-    }
-
-    if (valid?.success && valid?.data) {
-      ajax.post(authUri, valid.data)
-        .then((response) => response.data)
-        .then((data) => {
-          if (data.success) {
-            window.location.href = "/"
-          } else {
-            console.error(data.error)
-          }
-        })
-    }
-  }
-
+  const { methods, onSubmit, disabled } = useAuthForm()
+  
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -63,9 +27,9 @@ const Auth = () => {
             fieldName="remember"
             label="Remember me on this device"
           />
-            <span className="fieldset link">
-              Fogot password?
-            </span>
+          <span className="fieldset link">
+            Fogot password?
+          </span>
         </div>
         <button
           className="btn btn-primary dark:btn-info w-full mb-4"
