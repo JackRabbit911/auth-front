@@ -1,27 +1,12 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider } from "react-hook-form"
 
 import CheckBox from "reused/CheckBox";
 import TextInput from "reused/TextInput";
-import { authData } from "./schema";
-import { isObjectEmpty } from "common/utils";
-import { onSubmit } from "./utils";
+import { useAuthForm } from "./hooks";
 
 const Auth = () => {
-  const methods = useForm({
-    resolver: zodResolver(authData),
-    reValidateMode: "onChange",
-    defaultValues: {
-      email: '',
-      password: '',
-      remember: true,
-    },
-  })
-
-  const disabled = !isObjectEmpty(methods.formState.errors) ||
-    methods.watch('email') === '' ||
-    methods.watch('password') === ''
-
+  const { methods, onSubmit, disabled } = useAuthForm()
+  
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -42,9 +27,9 @@ const Auth = () => {
             fieldName="remember"
             label="Remember me on this device"
           />
-            <span className="fieldset link">
-              Fogot password?
-            </span>
+          <span className="fieldset link">
+            Fogot password?
+          </span>
         </div>
         <button
           className="btn btn-primary dark:btn-info w-full mb-4"
