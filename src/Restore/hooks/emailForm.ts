@@ -36,7 +36,7 @@ export const useEmailForm = () => {
                 .then((data) => {
                     if (data.success) {
                         dispatch(setUsername(data.result.name))
-                        navigate("/recovery/alert")
+                        navigate("/recovery/alert/info")
                     } else {
                         const validError = serverValidationErrors.safeParse(data.error)
                         if (validError.success === false) {
