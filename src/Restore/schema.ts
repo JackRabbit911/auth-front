@@ -12,5 +12,14 @@ const serverValidationError = z.object({
 
 export const serverValidationErrors = z.array(serverValidationError)
 
+export const passwordSchema = z.object({
+  password: z.string().min(5, "Password must be at least 5 characters"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
 export type Email = z.infer<typeof emailSch>
 export type ServerValidationError = z.infer<typeof serverValidationError>
+export type ConfirmPassword = z.infer<typeof passwordSchema>
