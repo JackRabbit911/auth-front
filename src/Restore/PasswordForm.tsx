@@ -1,38 +1,41 @@
-import { FormProvider, type SubmitHandler, type UseFormReturn } from "react-hook-form"
-import type { ConfirmPassword } from "./schema"
+import { FormProvider } from "react-hook-form"
+
 import TextInput from "reused/TextInput";
+import { usePasswordForm } from "./hooks/passwordForm";
 
 type Props = {
-    methods: UseFormReturn<ConfirmPassword>;
-    onSubmit: SubmitHandler<ConfirmPassword>;
+  id: number;
 }
 
-const PasswordForm = ({ methods, onSubmit }: Props) => {
-    return (
-        <FormProvider {...methods}>
-        <h3 className="text-xl">
-          {('Change Password form')}
-        </h3>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput
-            type="password"
-            fieldName="password"
-            label={('Password')}
-          />
-          <TextInput
-            type="password"
-            fieldName="confirmPassword"
-            label={('Confirm')}
-          />
-          <button
-            type="submit"
-            className="btn btn-primary dark:btn-info w-full mt-4"
-          >
-            {('Save')}
-          </button>
-        </form>
-      </FormProvider>
-    )
+const PasswordForm = ({ id }: Props) => {
+  const { methods, onSubmit, disabled } = usePasswordForm(id)
+  
+  return (
+    <FormProvider {...methods}>
+      <h3 className="text-xl">
+        {('Change Password form')}
+      </h3>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <TextInput
+          type="password"
+          fieldName="password"
+          label={('Password')}
+        />
+        <TextInput
+          type="password"
+          fieldName="confirmPassword"
+          label={('Confirm')}
+        />
+        <button
+          type="submit"
+          className="btn btn-primary dark:btn-info w-full mt-4"
+          disabled={disabled}
+        >
+          {('Save')}
+        </button>
+      </form>
+    </FormProvider>
+  )
 
 }
 
