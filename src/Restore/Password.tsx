@@ -20,7 +20,7 @@ const Password = () => {
       })
   }, [])
 
-  return  <PasswordForm id={Number(id)} />
+  return <PasswordForm id={Number(id)} />
 }
 
 export default Password
