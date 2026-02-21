@@ -1,9 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import refererReducer from "./referer";
+import { configureStore } from "@reduxjs/toolkit"
+import refererReducer from "./referer"
+import usernameReducer from "./username"
 
 const store = configureStore({
     reducer: {
         referer: refererReducer,
+        username: usernameReducer,
     },
 })
 
