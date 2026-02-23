@@ -3,3 +3,5 @@ export const getReferenceUri = 'auth'
 export const emailCheckUri = 'auth/email'
 export const passwordCheckUri = 'auth/confirm'
 export const passwordSaveUri = 'register/savepswd'
+
+export const getTranslateUri = '/gettranslate'
