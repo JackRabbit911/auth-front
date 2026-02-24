@@ -13,7 +13,7 @@ const Confirm = () => {
       .then((data) => {
         if (data.success) {
           if (data.result) {
-            navigate('/')
+            navigate('/register/alert/success')
           } else {
             navigate('/register/alert/warning')
           }
