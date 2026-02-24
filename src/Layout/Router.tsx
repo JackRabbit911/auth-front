@@ -1,14 +1,16 @@
 import { Route, Routes } from "react-router"
+
 import Auth from "Auth"
 import Restore from "Restore"
 import Register from "Register"
-import AlertInfo from "Restore/AlertInfo"
+import Confirm from "Register/Confirm"
 import Password from "Restore/Password"
+import AlertInfo from "Restore/AlertInfo"
 import AlertWarning from "Restore/AlertWarning"
 import AlertSuccess from "Restore/AlertSuccess"
 import RegisterInfo from "Register/alert/RegisterInfo"
-import Confirm from "Register/Confirm"
 import RegisterWarning from "Register/alert/RegisterWarning"
+import RegisterSuccess from "Register/alert/RegisterSuccess"
 
 const Router = () => {
   return (
@@ -19,6 +21,7 @@ const Router = () => {
         <Route path='alert'>
           <Route path='info' element={<RegisterInfo />} />
           <Route path='warning' element={<RegisterWarning />} />
+          <Route path='success' element={<RegisterSuccess />} />
         </Route>
         <Route path='confirm/:code' element={<Confirm />} />
       </Route>
