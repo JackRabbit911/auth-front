@@ -45,9 +45,11 @@ const Auth = () => {
         </button>
         <div className="fieldset flex justify-end gap-4">
           <span>{__('No account?')}</span>
-          <span className="link font-bold">
-            {__('Sign Up, please:')}
-          </span>
+          <Link to='/register'>
+            <span className="link font-bold">
+              {__('Sign Up, please:')}
+            </span>
+          </Link>
         </div>
       </form>
     </FormProvider>
