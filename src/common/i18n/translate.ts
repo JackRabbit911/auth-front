@@ -4,9 +4,7 @@ export type TranslateStore = {
     [key: string]: string | null;
 }
 
-const initialState: TranslateStore = {
-    'Welcome ;)': 'Заходи ;)'
-}
+const initialState: TranslateStore = {}
 
 export const translateSlice = createSlice({
     name: 'translate',
