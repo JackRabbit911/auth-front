@@ -15,7 +15,7 @@ const Auth = () => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <div className="flex flex-row justify-center">
-          <h1 className="text-xl">{__('Welcome ;)')}</h1>
+          <h1 className="text-xl">{__('Sign in to your account')}</h1>
         </div>
         <TextInput
           fieldName="email"
@@ -26,16 +26,18 @@ const Auth = () => {
           label={__('Password')}
           optional={__("min % symbols", 5)}
         />
-        <div className="flex flex-row justify-between my-4">
+        <div className="flex flex-row justify-between gap-4 my-4">
           <CheckBox
             fieldName="remember"
             label={__('Remember me on this device')}
           />
-          <Link to='recovery/email'>
-            <span className="fieldset link">
-              {__('Forgot password?')}
-            </span>
-          </Link>
+          <div className="text-end">
+            <Link to='recovery/email'>
+              <span className="fieldset link">
+                {__('Forgot password?')}
+              </span>
+            </Link>
+          </div>
         </div>
         <button
           className="btn btn-primary dark:btn-info w-full mb-4"
