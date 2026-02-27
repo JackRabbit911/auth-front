@@ -1,19 +1,18 @@
 import { FormProvider } from "react-hook-form"
 
-import { __ } from "common/i18n/utils";
 import TextInput from "reused/TextInput"
-import { useTranslate } from "common/i18n/hook";
 import { useEmailForm } from "./hooks/emailForm";
+import { useTranslate } from "common/i18n/hook";
 
 const Restore = () => {
   const { methods, onSubmit, disabled } = useEmailForm()
-  useTranslate()
+  const __ = useTranslate()
   
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <div className="flex flex-row justify-center">
-          <h1 className="text-xl">{__('Password recovery')}</h1>
+          <h1 className="text-xl">{__('Access recovery')}</h1>
         </div>
         <TextInput
           fieldName="email"
