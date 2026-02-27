@@ -1,11 +1,13 @@
-import { __ } from "common/i18n/utils";
+// import { __ } from "common/i18n/utils";
+import type { GetText } from "common/i18n/types";
 import { useFormContext } from "react-hook-form";
 
 type Props = {
   fieldName: string;
+  __: GetText;
 }
 
-const CheckBox = ({ fieldName }: Props) => {
+const CheckBox = ({ fieldName, __ }: Props) => {
   const { register, getValues } = useFormContext()
   const checked = Boolean(getValues(fieldName))
 

@@ -3,13 +3,12 @@ import { FormProvider } from "react-hook-form"
 
 import { useAuthForm } from "./hooks";
 import CheckBox from "reused/CheckBox";
-import { __ } from "common/i18n/utils";
 import TextInput from "reused/TextInput";
 import { useTranslate } from "common/i18n/hook";
 
 const Auth = () => {
   const { methods, onSubmit, disabled } = useAuthForm()
-  useTranslate()
+  const __ = useTranslate()
 
   return (
     <FormProvider {...methods}>

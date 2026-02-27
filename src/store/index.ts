@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
+
 import refererReducer from "./referer"
 import usernameReducer from "./username"
 import translateReducer from "common/i18n/translate"

@@ -1,27 +1,31 @@
 import { useEffect } from "react"
 
-import ajax from "common/ajax"
-import { translateKeys } from "./utils"
-import { setTranslate } from "./translate"
-import { getTranslateUri } from "common/constants"
+import { getTranslateThunk } from "./translate"
 import { useAppDispatch, useAppSelector } from "store/hooks"
 
+import type { Argv } from "./types"
+
 export const useTranslate = (clock: React.DependencyList = []) => {
+    const translate = useAppSelector((state) => state.translate.data)
     const dispatch = useAppDispatch()
-    const translate = useAppSelector((store) => store.translate)
+    const translateKeys: string[] = []
 
-    const getTranslateFx = async () => {
-        const keys = Object.keys(translate)
-        const diff = translateKeys.filter(x => !keys.includes(x));
-
-        if (diff.length > 0) {
-            const response = await ajax.post(getTranslateUri, { filter: diff })
-            const result = response.data.result
-            dispatch(setTranslate(result))
+    const sprintf = (str: string, ...argv: any[]): string => !argv.length ? str :
+        sprintf(str.replace("%", argv.shift()), ...argv);
+    
+    const gettext = (value: string, ...argv: Argv): string => {
+        if (!translate[value] && !translateKeys.includes(value)) {
+            translateKeys.push(value)
         }
+    
+        return translate[value]
+            ? sprintf(translate[value], ...argv)
+            : sprintf(value, ...argv)
     }
 
     useEffect(() => {
-        getTranslateFx()
+        dispatch(getTranslateThunk(translateKeys))
     }, clock)
+
+    return gettext
 }

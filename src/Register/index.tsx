@@ -1,13 +1,13 @@
 import { FormProvider } from "react-hook-form"
+
+import CheckBox from "./CheckBox"
 import { useRegisterForm } from "./hook"
 import TextInput from "reused/TextInput"
-import { __ } from "common/i18n/utils"
 import { useTranslate } from "common/i18n/hook"
-import CheckBox from "./CheckBox"
 
 const Register = () => {
   const { methods, onSubmit, disabled } = useRegisterForm()
-  useTranslate()
+  const __ = useTranslate()
 
   return (
     <FormProvider {...methods}>
@@ -34,7 +34,10 @@ const Register = () => {
           type="password"
           label={__('Confirm password')}
         />
-        <CheckBox fieldName="agree" />
+        <CheckBox
+          fieldName="agree"
+          __={__}
+        />
         <button
           className="btn btn-primary dark:btn-info w-full mt-4"
           disabled={disabled}
