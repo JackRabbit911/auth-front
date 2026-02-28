@@ -22,6 +22,7 @@ const Auth = () => {
         />
         <TextInput
           fieldName="password"
+          type="password"
           label={__('Password')}
           optional={__("min % symbols", 5)}
         />
