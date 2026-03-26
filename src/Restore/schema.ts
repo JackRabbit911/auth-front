@@ -18,6 +18,7 @@ const confirmValidationError = z.object({
 })
 
 export const passwordSchema = z.object({
+  _csrf: z.union([z.string(), z.boolean()]),
   id: z.number(),
   password: z.string().min(5, "Password must be at least 5 characters"),
   confirmPassword: z.string(),
