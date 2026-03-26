@@ -1,23 +1,24 @@
-import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 
-import ajax from "common/ajax";
 import PasswordForm from "./PasswordForm";
+import { getCsrfThunk } from "store/csrf";
+import { useAppDispatch } from "store/hooks";
 import { passwordCheckUri } from "common/constants";
 
 const Password = () => {
   const navigate = useNavigate()
   const { id, code } = useParams()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const uri = [passwordCheckUri, code].join('/')
-    ajax.get(uri)
-      .then((response) => response.data)
-      .then((data) => {
-        if (!data.result) {
-          navigate('/recovery/alert/warning')
-        }
-      })
+    const uri = [passwordCheckUri, id, code].join('/')
+    const promise = dispatch(getCsrfThunk(uri)).unwrap()
+    promise.then((result) => {
+      if (!result) {
+        navigate('/recovery/alert/warning')
+      }
+    })
   }, [])
 
   return <PasswordForm id={Number(id)} />
