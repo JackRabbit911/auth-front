@@ -3,12 +3,14 @@ import { configureStore } from "@reduxjs/toolkit"
 import refererReducer from "./referer"
 import usernameReducer from "./username"
 import translateReducer from "common/i18n/translate"
+import csrfReducer from "./csrf"
 
 export const store = configureStore({
     reducer: {
         referer: refererReducer,
         username: usernameReducer,
         translate: translateReducer,
+        csrf: csrfReducer,
     },
 })
 
