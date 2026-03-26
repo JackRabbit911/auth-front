@@ -2,6 +2,7 @@ import { FormProvider } from "react-hook-form"
 
 import TextInput from "reused/TextInput";
 import { usePasswordForm } from "./hooks/passwordForm";
+import CSRF from "reused/CSRF";
 
 type Props = {
   id: number;
@@ -16,6 +17,7 @@ const PasswordForm = ({ id }: Props) => {
         {('Change Password form')}
       </h3>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <CSRF />
         <TextInput
           type="password"
           fieldName="password"
