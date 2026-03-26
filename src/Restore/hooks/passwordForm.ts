@@ -2,12 +2,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ajax from "common/ajax";
 import { passwordSaveUri } from "common/constants";
 import { isObjectEmpty } from "common/utils";
+import { useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } from "Restore/schema";
+import { useAppSelector } from "store/hooks";
 
 export const usePasswordForm = (id: number) => {
     const navigate = useNavigate()
+    const csrf = useAppSelector((state) => state.csrf.data)
 
     const methods = useForm({
         resolver: zodResolver(passwordSchema),
@@ -15,7 +18,8 @@ export const usePasswordForm = (id: number) => {
         defaultValues: {
             id: id,
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            _csrf: csrf,
         }
     });
 
@@ -49,6 +53,10 @@ export const usePasswordForm = (id: number) => {
 
     const disabled = !isObjectEmpty(methods.formState.errors) ||
         password === '' || confirm === '' || password !== confirm
+
+    useEffect(() => {
+        methods.setValue('_csrf', csrf)
+    }, [csrf])
 
     return { methods, onSubmit, disabled }
 }
