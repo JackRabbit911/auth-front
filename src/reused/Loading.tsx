@@ -4,7 +4,7 @@ const Loading = () => {
   const __ = useTranslate()
 
   return (
-    <div className="!border-none !bg-transparent text-center">
+    <div className="text-center text-2xl">
       {__('Loading')}{' '}
       <span className="loading loading-dots"></span>
     </div>
