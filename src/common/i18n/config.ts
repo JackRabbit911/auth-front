@@ -13,7 +13,7 @@ export const DEFAULT_LANG = 'en'
 
 export const limit = null //cache limit in pairs key-valaue
 export const delay = 50 //debounse delay im ms
-export const getTranslateUri = 'http://localhost:8080/api/gettranslate'
+export const getTranslateUri = 'http://localhost/api/gettranslate'
 
 // export const detectLang = (): string => detectLangByAttribute()
 export const detectLang = (): string => detectLangByUri()
