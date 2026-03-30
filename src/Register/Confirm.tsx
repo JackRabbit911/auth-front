@@ -1,29 +1,43 @@
-import ajax from "common/ajax"
-import { confirmUri } from "common/constants"
 import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import Loading from "reused/Loading"
+import ErrorCmp from "reused/ErrorCmp"
+import { confirmCodeThunk } from "store/register"
+import { useAppDispatch, useAppSelector } from "store/hooks"
+
 const Confirm = () => {
   const { code } = useParams()
+  const dispatch = useAppDispatch()
+  const { loading, error } = useAppSelector((state) => state.common)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const uri = [confirmUri, code].join('/')
-    ajax.get(uri).then((response) => response.data)
-      .then((data) => {
-        if (data.success) {
-          if (data.result) {
-            navigate('/register/alert/success')
+    if (code) {
+      dispatch(confirmCodeThunk(code)).unwrap()
+        .then((data) => {
+          if (data.success) {
+            if (data.result) {
+              navigate('/register/alert/success')
+            } else {
+              navigate('/register/alert/warning')
+            }
           } else {
-            navigate('/register/alert/warning')
+            console.log(data)
           }
-        } else {
-          console.log(data)
-        }
-      })
+        })
+    }
   }, [])
 
-  return <>Wait, please...</>
+  if (loading) {
+    return <Loading />
+  }
+
+  if (error) {
+    return <ErrorCmp status={error} />
+  }
+
+  return <>Wait, please..</>
 }
 
 export default Confirm
