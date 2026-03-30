@@ -35,7 +35,6 @@ const Router = () => {
         </Route>
         <Route path='password/:id?/:code?' element={<Password />} />
       </Route>
-      <Route path='error/:code?' element={<ErrorCmp />} />
       <Route path='*' element={<ErrorCmp status={404} />} />
     </Routes>
   )
