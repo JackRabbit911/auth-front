@@ -1,19 +1,18 @@
+import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
+import { useCallback, useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import ajax from "common/ajax"
-import { useForm } from "react-hook-form"
-import { useAppDispatch } from "store/hooks"
 import { isObjectEmpty } from "common/utils"
-import { setUsername } from "store/username"
-import { emailCheckUri } from "common/constants"
+import { emailCheckThunk } from "store/username"
+import { useAppDispatch, useAppSelector } from "store/hooks"
 import { emailSch, serverValidationErrors } from "Restore/schema"
-
 import type { Email, ServerValidationError } from "Restore/schema"
 
 export const useEmailForm = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
+    const { loading, error } = useAppSelector((state) => state.common)
 
     const methods = useForm({
         resolver: zodResolver(emailSch),
@@ -23,7 +22,7 @@ export const useEmailForm = () => {
         },
     })
 
-    const onSubmit = (data: Email) => {
+    const onSubmit = useCallback(async (data: Email) => {
         const valid = emailSch.safeParse(data)
 
         if (valid?.error) {
@@ -31,33 +30,35 @@ export const useEmailForm = () => {
         }
 
         if (valid?.success && valid?.data) {
-            ajax.post(emailCheckUri, valid.data)
-                .then((response) => response.data)
-                .then((data) => {
-                    if (data.success) {
-                        dispatch(setUsername(data.result.name))
-                        navigate("/recovery/alert/info")
-                    } else {
-                        const validError = serverValidationErrors.safeParse(data.error)
-                        if (validError.success === false) {
-                            console.log(validError)
-                        } else {
-                            data.error.forEach((item: ServerValidationError) => {
-                                methods.setError(item.key, {
-                                    type: 'server',
-                                    message: item.msg,
-                                })
-                            })
-                        }
-                    }
-                })
+            const data = await dispatch(emailCheckThunk(valid.data)).unwrap()
+
+            if (data.success) {
+                navigate("/recovery/alert/info")
+            } else {
+                const validError = serverValidationErrors.safeParse(data.error)
+                if (validError.success === false) {
+                    console.log(validError)
+                } else if (data.error) {
+                    data?.error.forEach((item: ServerValidationError) => {
+                        methods.setError(item.key, {
+                            type: 'server',
+                            message: item.msg,
+                        })
+                    })
+                }
+            }
         }
-    }
+    }, [])
 
     const emailIsValid = () =>
         emailSch.safeParse(methods.watch()).success
-
     const disabled = !isObjectEmpty(methods.formState.errors) || !emailIsValid()
 
-    return { methods, onSubmit, disabled }
+    useEffect(() => {
+        if (error) {
+            navigate(`/error/${error}`)
+        }
+    }, [error])
+
+    return { methods, onSubmit, disabled, loading }
 }
