@@ -1,7 +1,5 @@
-import { useParams } from "react-router";
-
 type Props = {
-  status?: number | string | undefined;
+  status: number | string | undefined;
 }
 
 const getReasonPhrase = (status: number | string | undefined) => {
@@ -27,13 +25,10 @@ const getReasonPhrase = (status: number | string | undefined) => {
 }
 
 const ErrorCmp = ({ status }: Props) => {
-  const { code } = useParams()
-  const statusCode = status ?? code
-
   return (
     <div className="h-96 flex flex-col justify-center">
       <h1 className="text-center text-3xl">
-        {getReasonPhrase(statusCode)}
+        {getReasonPhrase(status)}
       </h1>
     </div>
   )

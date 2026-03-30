@@ -1,18 +1,17 @@
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { isObjectEmpty } from "common/utils"
 import { emailCheckThunk } from "store/username"
-import { useAppDispatch, useAppSelector } from "store/hooks"
+import { useAppDispatch } from "store/hooks"
 import { emailSch, serverValidationErrors } from "Restore/schema"
 import type { Email, ServerValidationError } from "Restore/schema"
 
 export const useEmailForm = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const { loading, error } = useAppSelector((state) => state.common)
 
     const methods = useForm({
         resolver: zodResolver(emailSch),
@@ -54,11 +53,5 @@ export const useEmailForm = () => {
         emailSch.safeParse(methods.watch()).success
     const disabled = !isObjectEmpty(methods.formState.errors) || !emailIsValid()
 
-    useEffect(() => {
-        if (error) {
-            navigate(`/error/${error}`)
-        }
-    }, [error])
-
-    return { methods, onSubmit, disabled, loading }
+    return { methods, onSubmit, disabled }
 }

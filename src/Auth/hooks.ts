@@ -1,8 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
-
 
 import { authThunk } from "store/auth";
 import { isObjectEmpty } from "common/utils";
@@ -11,9 +8,7 @@ import { authData, serverValidationErrors, type AuthData, type ServerValidationE
 
 export const useAuthForm = () => {
     const referer = useAppSelector((state) => state.referer.referer)
-    const { error, loading } = useAppSelector((state) => state.common)
     const dispatch = useAppDispatch()
-    const navigate = useNavigate()
 
     const methods = useForm({
         resolver: zodResolver(authData),
@@ -58,11 +53,5 @@ export const useAuthForm = () => {
         methods.watch('email') === '' ||
         methods.watch('password') === ''
 
-    useEffect(() => {
-        if (error) {
-            navigate(`/error/${error}`)
-        }
-    }, [error])
-
-    return { methods, onSubmit, disabled, loading }
+    return { methods, onSubmit, disabled }
 }

@@ -11,7 +11,6 @@ import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } fro
 export const usePasswordForm = (id: number) => {
     const navigate = useNavigate()
     const csrf = useAppSelector((state) => state.csrf.data)
-    const { error } = useAppSelector((state) => state.common)
     const dispatch = useAppDispatch()
 
     const methods = useForm({
@@ -57,12 +56,6 @@ export const usePasswordForm = (id: number) => {
     useEffect(() => {
         methods.setValue('_csrf', csrf)
     }, [csrf])
-
-    useEffect(() => {
-        if (error) {
-            navigate(`/error/${error}`)
-        }
-    }, [error])
 
     return { methods, onSubmit, disabled }
 }

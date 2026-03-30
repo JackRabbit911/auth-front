@@ -1,15 +1,12 @@
 import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
 
-import Loading from "reused/Loading"
-import ErrorCmp from "reused/ErrorCmp"
 import { confirmCodeThunk } from "store/register"
-import { useAppDispatch, useAppSelector } from "store/hooks"
+import { useAppDispatch } from "store/hooks"
 
 const Confirm = () => {
   const { code } = useParams()
   const dispatch = useAppDispatch()
-  const { loading, error } = useAppSelector((state) => state.common)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -28,14 +25,6 @@ const Confirm = () => {
         })
     }
   }, [])
-
-  if (loading) {
-    return <Loading />
-  }
-
-  if (error) {
-    return <ErrorCmp status={error} />
-  }
 
   return <>Wait, please..</>
 }
