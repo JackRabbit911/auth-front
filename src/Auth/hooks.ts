@@ -1,14 +1,19 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
-import ajax from "common/ajax";
-import { loginUri } from "common/constants";
-import { useAppSelector } from "store/hooks";
+
+import { authThunk } from "store/auth";
 import { isObjectEmpty } from "common/utils";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { authData, serverValidationErrors, type AuthData, type ServerValidationError } from "./schema";
 
 export const useAuthForm = () => {
     const referer = useAppSelector((state) => state.referer.referer)
+    const { error, loading } = useAppSelector((state) => state.common)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     const methods = useForm({
         resolver: zodResolver(authData),
@@ -20,7 +25,7 @@ export const useAuthForm = () => {
         },
     })
 
-    const onSubmit: SubmitHandler<AuthData> = (data) => {
+    const onSubmit: SubmitHandler<AuthData> = async (data) => {
         const valid = authData.safeParse(data)
 
         if (valid?.error) {
@@ -28,25 +33,24 @@ export const useAuthForm = () => {
         }
 
         if (valid?.success && valid?.data) {
-            ajax.post(loginUri, valid.data)
-                .then((response) => response.data)
-                .then((data) => {
-                    if (data.success) {
-                        window.location.href = referer
-                    } else {
-                        const validError = serverValidationErrors.safeParse(data.error)
-                        if (validError.success === false) {
-                            console.log(validError)
-                        } else {
-                            data.error.forEach((item: ServerValidationError) => {
-                                methods.setError(item.key, {
-                                    type: 'server',
-                                    message: item.msg,
-                                })
-                            })
-                        }
-                    }
-                })
+            const data = await dispatch(authThunk(valid.data)).unwrap()
+
+            if (data.success) {
+                window.location.href = referer
+            } else {
+                const validError = serverValidationErrors.safeParse(data.error)
+
+                if (validError.success === false) {
+                    console.log(validError)
+                } else {
+                    data.error.forEach((item: ServerValidationError) => {
+                        methods.setError(item.key, {
+                            type: 'server',
+                            message: item.msg,
+                        })
+                    })
+                }
+            }
         }
     }
 
@@ -54,5 +58,11 @@ export const useAuthForm = () => {
         methods.watch('email') === '' ||
         methods.watch('password') === ''
 
-    return { methods, onSubmit, disabled }
+    useEffect(() => {
+        if (error) {
+            navigate(`/error/${error}`)
+        }
+    }, [error])
+
+    return { methods, onSubmit, disabled, loading }
 }
