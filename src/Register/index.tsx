@@ -3,7 +3,7 @@ import { FormProvider } from "react-hook-form"
 import CheckBox from "./CheckBox"
 import { useRegisterForm } from "./hook"
 import TextInput from "reused/TextInput"
-import { useTranslate } from "common/i18n/hook"
+import { useTranslate } from "common/i18n/hooks"
 
 const Register = () => {
   const { methods, onSubmit, disabled } = useRegisterForm()

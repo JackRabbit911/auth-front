@@ -1,8 +1,7 @@
 import Alert from "reused/Alert";
 import Info from "reused/icons/Info";
-// import { __ } from "common/i18n/utils";
 import { useAppSelector } from "store/hooks";
-import { useTranslate } from "common/i18n/hook";
+import { useTranslate } from "common/i18n/hooks";
 
 const RegisterInfo = () => {
   const username = useAppSelector((state) => state.username.name)

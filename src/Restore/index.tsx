@@ -2,7 +2,7 @@ import { FormProvider } from "react-hook-form"
 
 import TextInput from "reused/TextInput"
 import { useEmailForm } from "./hooks/emailForm";
-import { useTranslate } from "common/i18n/hook";
+import { useTranslate } from "common/i18n/hooks";
 
 const Restore = () => {
   const { methods, onSubmit, disabled } = useEmailForm()
