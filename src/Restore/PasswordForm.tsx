@@ -1,8 +1,8 @@
 import { FormProvider } from "react-hook-form"
 
+import CSRF from "reused/CSRF";
 import TextInput from "reused/TextInput";
 import { usePasswordForm } from "./hooks/passwordForm";
-import CSRF from "reused/CSRF";
 
 type Props = {
   id: number;
@@ -38,7 +38,6 @@ const PasswordForm = ({ id }: Props) => {
       </form>
     </FormProvider>
   )
-
 }
 
 export default PasswordForm
