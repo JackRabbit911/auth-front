@@ -26,12 +26,18 @@ const commonSlice = createSlice({
             .addCase(registerThunk.pending, (state) => {
                 state.loading = true
             })
+            .addCase(registerThunk.fulfilled, (state) => {
+                state.loading = false
+            })
             .addCase(registerThunk.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload
             })
             .addCase(emailCheckThunk.pending, (state) => {
                 state.loading = true
+            })
+            .addCase(emailCheckThunk.fulfilled, (state) => {
+                state.loading = false
             })
             .addCase(emailCheckThunk.rejected, (state, action) => {
                 state.loading = false
@@ -40,12 +46,18 @@ const commonSlice = createSlice({
             .addCase(authThunk.pending, (state) => {
                 state.loading = true
             })
+            .addCase(authThunk.fulfilled, (state) => {
+                state.loading = false
+            })
             .addCase(authThunk.rejected, (state, action) => {
                 state.loading = false
                 state.error = action?.payload
             })
             .addCase(restorePswdThunk.pending, (state) => {
                 state.loading = true
+            })
+            .addCase(restorePswdThunk.fulfilled, (state) => {
+                state.loading = false
             })
             .addCase(restorePswdThunk.rejected, (state, action) => {
                 state.loading = false
@@ -54,12 +66,12 @@ const commonSlice = createSlice({
             .addCase(confirmCodeThunk.pending, (state) => {
                 state.loading = true
             })
+            .addCase(confirmCodeThunk.fulfilled, (state) => {
+                state.loading = false
+            })
             .addCase(confirmCodeThunk.rejected, (state, action) => {
                 state.loading = false
                 state.error = action?.payload
-            })
-             .addCase(getCsrfThunk.pending, (state) => {
-                state.loading = true
             })
             .addCase(getCsrfThunk.rejected, (state, action) => {
                 state.loading = false
