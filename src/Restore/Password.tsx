@@ -1,27 +1,33 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 
+import Loading from "reused/Loading";
 import PasswordForm from "./PasswordForm";
 import { getCsrfThunk } from "store/csrf";
-import { useAppDispatch } from "store/hooks";
 import { passwordCheckUri } from "common/constants";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 
 const Password = () => {
   const navigate = useNavigate()
   const { id, code } = useParams()
   const dispatch = useAppDispatch()
+  const { loading } = useAppSelector((state) => state.common)
 
   useEffect(() => {
     const uri = [passwordCheckUri, id, code].join('/')
-    const promise = dispatch(getCsrfThunk(uri)).unwrap()
-    promise.then((result) => {
-      if (!result) {
-        navigate('/recovery/alert/warning')
-      }
-    })
+    dispatch(getCsrfThunk(uri)).unwrap()
+      .then((data) => {
+        if (!data.result) {
+          navigate('/recovery/alert/warning')
+        }
+      })
   }, [])
 
-  return <PasswordForm id={Number(id)} />
+  return (
+    <>
+      {!loading ? <PasswordForm id={Number(id)} /> : <Loading />}
+    </>
+  )
 }
 
 export default Password

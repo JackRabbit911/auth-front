@@ -5,7 +5,7 @@ export const emailSch = z.object({
         .min(6, { message: 'Required' })
 })
 
-const serverValidationError = z.object({
+export const serverValidationError = z.object({
     key: z.literal('email'),
     msg: z.string(),
 })

@@ -4,6 +4,7 @@ import Auth from "Auth"
 import Restore from "Restore"
 import Register from "Register"
 import Confirm from "Register/Confirm"
+import ErrorCmp from "reused/ErrorCmp"
 import Password from "Restore/Password"
 import AlertInfo from "Restore/AlertInfo"
 import AlertWarning from "Restore/AlertWarning"
@@ -34,6 +35,8 @@ const Router = () => {
         </Route>
         <Route path='password/:id?/:code?' element={<Password />} />
       </Route>
+      <Route path='error/:code?' element={<ErrorCmp />} />
+      <Route path='*' element={<ErrorCmp status={404} />} />
     </Routes>
   )
 }

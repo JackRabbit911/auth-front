@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 
+import commonReducer from "./common"
 import refererReducer from "./referer"
 import usernameReducer from "./username"
 import translateReducer from "common/i18n/translate"
@@ -7,6 +8,7 @@ import csrfReducer from "./csrf"
 
 export const store = configureStore({
     reducer: {
+        common: commonReducer,
         referer: refererReducer,
         username: usernameReducer,
         translate: translateReducer,

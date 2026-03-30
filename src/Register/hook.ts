@@ -1,14 +1,13 @@
+import { useCallback } from "react"
 import { useNavigate } from "react-router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
 
-import ajax from "common/ajax"
 import { isObjectEmpty } from "common/utils"
 import { useAppDispatch } from "store/hooks"
 import { setUsername } from "store/username"
-import { registerUri } from "common/constants"
-import { registerData, type RegisterData } from "./schema"
-import { serverValidationErrors, type ServerValidationError } from "Restore/schema"
+import { registerThunk } from "store/register"
+import { registerData, serverValidationErrors, type RegisterData, type ServerValidationError } from "./schema"
 
 export const useRegisterForm = () => {
     const navigate = useNavigate()
@@ -26,7 +25,7 @@ export const useRegisterForm = () => {
         }
     })
 
-    const onSubmit: SubmitHandler<RegisterData> = async (data) => {
+    const onSubmit: SubmitHandler<RegisterData> = useCallback(async (data) => {
         const valid = registerData.safeParse(data)
 
         if (valid?.error) {
@@ -34,17 +33,16 @@ export const useRegisterForm = () => {
         }
 
         if (valid?.success && valid?.data) {
-            const response = await ajax.post(registerUri, valid.data)
-            const data = response.data
+            const data = await dispatch(registerThunk(valid.data)).unwrap()
 
             if (data.success) {
-                dispatch(setUsername(data.result.name))
+                dispatch(setUsername(valid.data.name))
                 navigate('/register/alert/info')
             } else {
                 const validError = serverValidationErrors.safeParse(data.error)
                 if (validError.success === false) {
                     console.log(validError)
-                } else {
+                } else if (data.error) {
                     data.error.forEach((item: ServerValidationError) => {
                         methods.setError(item.key, {
                             type: 'server',
@@ -54,7 +52,7 @@ export const useRegisterForm = () => {
                 }
             }
         }
-    }
+    }, [])
 
     const { name, email, password, confirmPassword, agree } = methods.watch()
 
