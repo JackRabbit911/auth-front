@@ -1,16 +1,18 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import ajax from "common/ajax";
-import { passwordSaveUri } from "common/constants";
-import { isObjectEmpty } from "common/utils";
 import { useEffect } from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { isObjectEmpty } from "common/utils";
+import { restorePswdThunk } from "store/restorePswd";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } from "Restore/schema";
-import { useAppSelector } from "store/hooks";
 
 export const usePasswordForm = (id: number) => {
     const navigate = useNavigate()
     const csrf = useAppSelector((state) => state.csrf.data)
+    const { error } = useAppSelector((state) => state.common)
+    const dispatch = useAppDispatch()
 
     const methods = useForm({
         resolver: zodResolver(passwordSchema),
@@ -23,7 +25,7 @@ export const usePasswordForm = (id: number) => {
         }
     });
 
-    const onSubmit: SubmitHandler<ConfirmPassword> = (data) => {
+    const onSubmit: SubmitHandler<ConfirmPassword> = async (data) => {
         const valid = passwordSchema.safeParse(data)
 
         if (valid?.error) {
@@ -31,20 +33,18 @@ export const usePasswordForm = (id: number) => {
         }
 
         if (valid?.success && valid?.data) {
-            ajax.post(passwordSaveUri, valid.data)
-                .then((response) => response.data)
-                .then((data) => {
-                    if (data.success) {
-                        navigate('/recovery/alert/success')
-                    } else {
-                        data.error.forEach((item: ConfirmValidationError) => {
-                            methods.setError(item.key, {
-                                type: 'server',
-                                message: item.msg,
-                            })
-                        })
-                    }
+            const data = await dispatch(restorePswdThunk(valid.data)).unwrap()
+
+            if (data.success) {
+                navigate('/recovery/alert/success')
+            } else {
+                data.error.forEach((item: ConfirmValidationError) => {
+                    methods.setError(item.key, {
+                        type: 'server',
+                        message: item.msg,
+                    })
                 })
+            }
         }
     }
 
@@ -57,6 +57,12 @@ export const usePasswordForm = (id: number) => {
     useEffect(() => {
         methods.setValue('_csrf', csrf)
     }, [csrf])
+
+    useEffect(() => {
+        if (error) {
+            navigate(`/error/${error}`)
+        }
+    }, [error])
 
     return { methods, onSubmit, disabled }
 }
