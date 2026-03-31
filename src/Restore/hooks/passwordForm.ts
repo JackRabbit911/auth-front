@@ -1,11 +1,11 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useCallback, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { isObjectEmpty } from "common/utils";
 import { restorePswdThunk } from "store/restorePswd";
-import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } from "Restore/schema";
 
 export const usePasswordForm = (id: number) => {
@@ -24,7 +24,7 @@ export const usePasswordForm = (id: number) => {
         }
     });
 
-    const onSubmit: SubmitHandler<ConfirmPassword> = async (data) => {
+    const onSubmit: SubmitHandler<ConfirmPassword> = useCallback (async (data) => {
         const valid = passwordSchema.safeParse(data)
 
         if (valid?.error) {
@@ -33,7 +33,6 @@ export const usePasswordForm = (id: number) => {
 
         if (valid?.success && valid?.data) {
             const data = await dispatch(restorePswdThunk(valid.data)).unwrap()
-
             if (data.success) {
                 navigate('/recovery/alert/success')
             } else {
@@ -45,7 +44,7 @@ export const usePasswordForm = (id: number) => {
                 })
             }
         }
-    }
+    }, [])
 
     const password = methods.watch('password')
     const confirm = methods.watch('confirmPassword')

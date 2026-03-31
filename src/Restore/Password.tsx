@@ -16,6 +16,7 @@ const Password = () => {
     dispatch(getCsrfThunk(uri)).unwrap()
       .then((data) => {
         if (!data.result) {
+          console.log(data)
           navigate('/recovery/alert/warning')
         }
       })

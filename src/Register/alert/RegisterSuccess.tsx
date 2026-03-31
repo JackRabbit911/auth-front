@@ -1,5 +1,4 @@
-import { useTranslate } from "common/i18n/hook";
-// import { __ } from "common/i18n/utils";
+import { useTranslate } from "common/i18n/hooks";
 import { Link } from "react-router";
 import Alert from "reused/Alert";
 import Success from "reused/icons/Success";

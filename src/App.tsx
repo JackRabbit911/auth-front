@@ -1,30 +1,27 @@
 import { useEffect } from "react"
-import { BrowserRouter } from "react-router"
+import { useLocation } from "react-router"
 
 import Layout from "Layout"
 import Router from "Layout/Router"
 import { getReferer } from "Auth/utils"
 import { setReferer } from "store/referer"
 import { useAppDispatch } from "store/hooks"
-
-const prefix = () => {
-  const lang = document.querySelector('html')?.getAttribute('lang');
-  return (lang === 'ru') ? '/auth' : `/${lang}/auth`
-}
+import TranslateProvider from "common/i18n/TranslateProvider"
 
 function App() {
   const dispatch = useAppDispatch()
+  const location = useLocation()
 
   useEffect(() => {
     dispatch(setReferer(getReferer()))
   }, [])
 
   return (
-    <BrowserRouter basename={prefix()}>
-      <Layout>
-        <Router />
-      </Layout>
-    </BrowserRouter>
+      <TranslateProvider deps={[location]}>
+        <Layout>
+          <Router />
+        </Layout>
+      </TranslateProvider>
   )
 }
 
