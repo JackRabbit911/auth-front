@@ -2,18 +2,24 @@ import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/tool
 
 import ajax from "common/ajax";
 import type { ApiResponse } from "common/ajax/types";
+import { passwordCheckUri } from "common/constants";
 
 type CsrfStore = {
     data: string | boolean;
 }
 
 type Result = ApiResponse<string>
+type Params = {
+    id: string | undefined;
+    code: string | undefined;
+}
 
 const initialState: CsrfStore = {data: ''}
 
-export const getCsrfThunk = createAsyncThunk<Result, string, { rejectValue: number | undefined }>(
+export const getCsrfThunk = createAsyncThunk<Result, Params, { rejectValue: number | undefined }>(
     'getCsrfThunk',
-    async (uri: string) => {
+    async ({id: id, code: code}) => {
+        const uri = [passwordCheckUri, id, code].join('/')
         const response = await ajax.get(uri)
         return response.data
     }
