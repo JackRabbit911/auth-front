@@ -27,6 +27,7 @@ const Router = () => {
         <Route path='confirm/:code' element={<Confirm />} />
       </Route>
       <Route path='recovery'>
+        <Route path='' element={<ErrorCmp status={404} />} />
         <Route path='email' element={<Restore />} />
         <Route path='alert'>
           <Route path='info' element={<AlertInfo />} />
