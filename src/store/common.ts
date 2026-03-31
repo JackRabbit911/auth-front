@@ -5,7 +5,7 @@ import { emailCheckThunk } from "./username";
 import { restorePswdThunk } from "store/restorePswd";
 import { confirmCodeThunk, registerThunk } from "./register";
 import { authThunk } from "./auth";
-import { getCsrfThunk } from "./csrf";
+// import { getCsrfThunk } from "./csrf";
 
 type CommonStore = {
     loading: boolean;
@@ -73,10 +73,11 @@ const commonSlice = createSlice({
                 state.loading = false
                 state.error = action?.payload
             })
-            .addCase(getCsrfThunk.rejected, (state, action) => {
-                state.loading = false
-                state.error = action?.payload
-            });
+            // .addCase(getCsrfThunk.rejected, (state, action) => {
+            //     state.loading = false
+            //     state.error = action?.payload
+            // })
+            ;
     }
 })
 
