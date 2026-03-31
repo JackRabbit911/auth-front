@@ -1,11 +1,11 @@
-import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useCallback, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { isObjectEmpty } from "common/utils";
 import { restorePswdThunk } from "store/restorePswd";
-import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } from "Restore/schema";
 
 export const usePasswordForm = (id: number) => {
@@ -33,7 +33,6 @@ export const usePasswordForm = (id: number) => {
 
         if (valid?.success && valid?.data) {
             const data = await dispatch(restorePswdThunk(valid.data)).unwrap()
-            debugger
             if (data.success) {
                 navigate('/recovery/alert/success')
             } else {
