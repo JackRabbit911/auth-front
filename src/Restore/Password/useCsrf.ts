@@ -1,19 +1,16 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 
-import PasswordForm from "./PasswordForm";
 import { getCsrfThunk } from "store/csrf";
-import { passwordCheckUri } from "common/constants";
 import { useAppDispatch } from "store/hooks";
 
-const Password = () => {
+const useCsrf = () => {
   const navigate = useNavigate()
   const { id, code } = useParams()
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const uri = [passwordCheckUri, id, code].join('/')
-    dispatch(getCsrfThunk(uri)).unwrap()
+    dispatch(getCsrfThunk({id: id, code: code})).unwrap()
       .then((data) => {
         if (!data.result) {
           console.log(data)
@@ -22,7 +19,7 @@ const Password = () => {
       })
   }, [])
 
-  return <PasswordForm id={Number(id)} />
+  return { id: Number(id) }
 }
 
-export default Password
+export default useCsrf

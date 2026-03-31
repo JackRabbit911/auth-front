@@ -16,9 +16,9 @@ import RegisterSuccess from "Register/alert/RegisterSuccess"
 const Router = () => {
   return (
     <Routes>
-      <Route path='' element={<Auth />} />
+      <Route index element={<Auth />} />
       <Route path='register'>
-        <Route path='' element={<Register />} />
+        <Route index element={<Register />} />
         <Route path='alert'>
           <Route path='info' element={<RegisterInfo />} />
           <Route path='warning' element={<RegisterWarning />} />
@@ -27,7 +27,7 @@ const Router = () => {
         <Route path='confirm/:code' element={<Confirm />} />
       </Route>
       <Route path='recovery'>
-        <Route path='' element={<ErrorCmp status={404} />} />
+        <Route index element={<ErrorCmp status={404} />} />
         <Route path='email' element={<Restore />} />
         <Route path='alert'>
           <Route path='info' element={<AlertInfo />} />
