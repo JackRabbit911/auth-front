@@ -1,9 +1,11 @@
+import { useTranslate } from "common/i18n/hooks";
 import Alert from "reused/Alert";
 import Info from "reused/icons/Info";
 import { useAppSelector } from "store/hooks";
 
 const AlertInfo = () => {
   const username = useAppSelector((state) => state.username.name)
+  const __ = useTranslate()
 
   return (
     <Alert
@@ -11,19 +13,19 @@ const AlertInfo = () => {
       icon={<Info />}
     >
       <h3 className="text-lg font-medium">
-        Всё будет хорошо!
+        {__('Everything will be fine!')}
       </h3>
       <h4 className="text-md font-bold">
-        Ув., {username}!
+        {__('Dear, %!', username)}
       </h4>
       <p>
-        На указанный Вами адрес электропочты направлено письмо со ссылкой на сброс и восстановление пароля
+        {__('mail_recovery_info')}
       </p>
       <p>
         <span className="font-bold me-4">
-          Важно!
+          {__('Important!')}
         </span>
-        Если не найдёте письмо во Входящих, поищите в папке Спам
+        {__('look_spam')}
       </p>
     </Alert>
 
