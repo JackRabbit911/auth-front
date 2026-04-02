@@ -1,14 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { authThunk } from "store/auth";
 import { isObjectEmpty } from "common/utils";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { authData, serverValidationErrors, type AuthData, type ServerValidationError } from "./schema";
+import { useAuthMutation } from "common/api";
+import { useAppSelector } from "store/hooks";
+import { authData, serverValidationErrors, type AuthData, type AuthValidationError } from "./schema";
 
 export const useAuthForm = () => {
+    const [auth, { isLoading, isError, error }] = useAuthMutation()
     const referer = useAppSelector((state) => state.referer.referer)
-    const dispatch = useAppDispatch()
+    const responseStatus = { isLoading, isError, error }
 
     const methods = useForm({
         resolver: zodResolver(authData),
@@ -28,7 +29,7 @@ export const useAuthForm = () => {
         }
 
         if (valid?.success && valid?.data) {
-            const data = await dispatch(authThunk(valid.data)).unwrap()
+            const data = await auth(valid.data).unwrap()
 
             if (data.success) {
                 window.location.href = referer
@@ -37,8 +38,8 @@ export const useAuthForm = () => {
 
                 if (validError.success === false) {
                     console.log(validError)
-                } else {
-                    data.error.forEach((item: ServerValidationError) => {
+                } else if (data.error) {
+                    data.error.forEach((item: AuthValidationError) => {
                         methods.setError(item.key, {
                             type: 'server',
                             message: item.msg,
@@ -53,5 +54,5 @@ export const useAuthForm = () => {
         methods.watch('email') === '' ||
         methods.watch('password') === ''
 
-    return { methods, onSubmit, disabled }
+    return { methods, onSubmit, disabled, responseStatus }
 }

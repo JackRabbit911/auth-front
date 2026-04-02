@@ -5,10 +5,10 @@ import Restore from "Restore"
 import Register from "Register"
 import Confirm from "Register/Confirm"
 import ErrorCmp from "reused/ErrorCmp"
-import Password from "Restore/Password"
 import AlertInfo from "Restore/AlertInfo"
 import AlertWarning from "Restore/AlertWarning"
 import AlertSuccess from "Restore/AlertSuccess"
+import PasswordForm from "Restore/PasswordForm"
 import RegisterInfo from "Register/alert/RegisterInfo"
 import RegisterWarning from "Register/alert/RegisterWarning"
 import RegisterSuccess from "Register/alert/RegisterSuccess"
@@ -34,7 +34,7 @@ const Router = () => {
           <Route path='warning' element={<AlertWarning />} />
           <Route path='success' element={<AlertSuccess />} />
         </Route>
-        <Route path='password/:id?/:code?' element={<Password />} />
+        <Route path='password/:id?/:code?' element={<PasswordForm />} />
       </Route>
       <Route path='*' element={<ErrorCmp status={404} />} />
     </Routes>

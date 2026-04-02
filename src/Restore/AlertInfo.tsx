@@ -1,12 +1,12 @@
-import { useTranslate } from "common/i18n/hooks";
 import Alert from "reused/Alert";
 import Info from "reused/icons/Info";
 import { useAppSelector } from "store/hooks";
+import { useTranslate } from "common/i18n/hooks";
 
 const AlertInfo = () => {
   const username = useAppSelector((state) => state.username.name)
   const __ = useTranslate()
-
+  
   return (
     <Alert
       className="alert alert-info"

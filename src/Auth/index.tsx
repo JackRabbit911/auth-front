@@ -8,11 +8,11 @@ import { useTranslate } from "common/i18n/hooks";
 import ErrorOrPending from "reused/ErrorOrPendig";
 
 const Auth = () => {
-  const { methods, onSubmit, disabled } = useAuthForm()
+  const { methods, onSubmit, disabled, responseStatus } = useAuthForm()
   const __ = useTranslate()
 
   return (
-    <ErrorOrPending>
+    <ErrorOrPending responseStatus={responseStatus}>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <div className="flex flex-row justify-center">

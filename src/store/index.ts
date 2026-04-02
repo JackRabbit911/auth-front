@@ -1,17 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit"
 
-import commonReducer from "./common"
+import { authApi } from "common/api"
 import refererReducer from "./referer"
 import usernameReducer from "./username"
-import csrfReducer from "./csrf"
 
 export const store = configureStore({
     reducer: {
-        common: commonReducer,
         referer: refererReducer,
         username: usernameReducer,
-        csrf: csrfReducer,
+        [authApi.reducerPath]: authApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(authApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>
