@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useGetCsrfQuery } from "services/api";
+import { useGetCsrfQuery } from "common/api";
 
 const useCsrf = () => {
   const navigate = useNavigate()
