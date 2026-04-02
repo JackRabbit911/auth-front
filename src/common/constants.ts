@@ -1,5 +1,4 @@
 export const loginUri = 'auth/login'
-export const getReferenceUri = 'auth'
 export const emailCheckUri = 'recovery/email'
 export const passwordCheckUri = 'recovery/confirm'
 export const passwordSaveUri = 'recovery/savepswd'
