@@ -28,6 +28,6 @@ export const passwordSchema = z.object({
 });
 
 export type Email = z.infer<typeof emailSch>
-export type ServerValidationError = z.infer<typeof serverValidationError>
+export type EmailValidationError = z.infer<typeof serverValidationError>
 export type ConfirmPassword = z.infer<typeof passwordSchema>
 export type ConfirmValidationError = z.infer<typeof confirmValidationError>

@@ -19,4 +19,4 @@ const serverValidationError = z.object({
 export const serverValidationErrors = z.array(serverValidationError)
 
 export type RegisterData = z.infer<typeof registerData>
-export type ServerValidationError = z.infer<typeof serverValidationError>
+export type RegisterValidationError = z.infer<typeof serverValidationError>
