@@ -1,7 +1,8 @@
+import type { SerializedError } from "@reduxjs/toolkit";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+
 import Loading from "./Loading";
 import ErrorCmp from "./ErrorCmp";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import type { SerializedError } from "@reduxjs/toolkit";
 
 type ResponseStatus = {
   isLoading: boolean;
