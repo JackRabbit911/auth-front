@@ -1,16 +1,16 @@
 import { FormProvider } from "react-hook-form"
 
 import TextInput from "reused/TextInput"
-import { useEmailForm } from "./hooks/emailForm";
-import { useTranslate } from "common/i18n/hooks";
-import ErrorOrPending from "reused/ErrorOrPendig";
+import { useEmailForm } from "./hooks/emailForm"
+import { useTranslate } from "common/i18n/hooks"
+import ErrorOrPending from "reused/ErrorOrPendig"
 
 const Restore = () => {
-  const { methods, onSubmit, disabled } = useEmailForm()
+  const { methods, onSubmit, disabled, responseStatus } = useEmailForm()
   const __ = useTranslate()
 
   return (
-    <ErrorOrPending>
+    <ErrorOrPending responseStatus={responseStatus}>
       <FormProvider {...methods
       } >
         <form onSubmit={methods.handleSubmit(onSubmit)}>

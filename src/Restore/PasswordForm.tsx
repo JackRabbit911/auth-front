@@ -6,16 +6,12 @@ import ErrorOrPending from "reused/ErrorOrPendig";
 import { usePasswordForm } from "./hooks/passwordForm";
 import { useTranslate } from "common/i18n/hooks";
 
-type Props = {
-  id: number;
-}
-
-const PasswordForm = ({ id }: Props) => {
-  const { methods, onSubmit, disabled } = usePasswordForm(id)
+const PasswordForm = () => {
+  const { methods, onSubmit, disabled, responseStatus } = usePasswordForm()
   const __ = useTranslate()
 
   return (
-    <ErrorOrPending>
+    <ErrorOrPending responseStatus={responseStatus}>
       <FormProvider {...methods}>
         <h3 className="text-xl">
           {__('Change Password form')}
