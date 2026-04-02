@@ -3,7 +3,7 @@ import { useRedirect } from "./redirect"
 const Confirm = () => {
   useRedirect()
   
-  return null
+  return <></>
 }
 
 export default Confirm
