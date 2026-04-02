@@ -6,12 +6,14 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { isObjectEmpty } from "common/utils"
 import { useAppDispatch } from "store/hooks"
 import { setUsername } from "store/username"
-import { registerThunk } from "store/register"
-import { registerData, serverValidationErrors, type RegisterData, type ServerValidationError } from "./schema"
+import { useRegisterMutation } from "common/api"
+import { registerData, serverValidationErrors, type RegisterData, type RegisterValidationError } from "./schema"
 
 export const useRegisterForm = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
+    const [registerFx, { isLoading, isError, error }] = useRegisterMutation()
+    const responseStatus = { isLoading, isError, error }
 
     const methods = useForm({
         resolver: zodResolver(registerData),
@@ -33,7 +35,7 @@ export const useRegisterForm = () => {
         }
 
         if (valid?.success && valid?.data) {
-            const data = await dispatch(registerThunk(valid.data)).unwrap()
+            const data = await registerFx(valid.data).unwrap()
 
             if (data.success) {
                 dispatch(setUsername(valid.data.name))
@@ -43,7 +45,7 @@ export const useRegisterForm = () => {
                 if (validError.success === false) {
                     console.log(validError)
                 } else if (data.error) {
-                    data.error.forEach((item: ServerValidationError) => {
+                    data.error.forEach((item: RegisterValidationError) => {
                         methods.setError(item.key, {
                             type: 'server',
                             message: item.msg,
@@ -60,5 +62,5 @@ export const useRegisterForm = () => {
         name === '' || email === '' || password === '' || agree === false ||
         confirmPassword === '' || password !== confirmPassword
 
-    return { methods, onSubmit, disabled }
+    return { methods, onSubmit, disabled, responseStatus }
 }
