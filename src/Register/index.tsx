@@ -7,11 +7,11 @@ import { useTranslate } from "common/i18n/hooks"
 import ErrorOrPending from "reused/ErrorOrPendig"
 
 const Register = () => {
-  const { methods, onSubmit, disabled } = useRegisterForm()
+  const { methods, onSubmit, disabled, responseStatus } = useRegisterForm()
   const __ = useTranslate()
 
   return (
-    <ErrorOrPending>
+    <ErrorOrPending responseStatus={responseStatus}>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <div className="flex flex-row justify-center">
