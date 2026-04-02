@@ -1,23 +1,25 @@
-import { useNavigate } from "react-router";
 import { useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { isObjectEmpty } from "common/utils";
-import { restorePswdThunk } from "store/restorePswd";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import useCsrf from "Restore/hooks/useCsrf";
+import { useRestorePswdMutation } from "common/api";
 import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } from "Restore/schema";
 
-export const usePasswordForm = (id: number) => {
+export const usePasswordForm = () => {
+    const { id } = useParams()
     const navigate = useNavigate()
-    const csrf = useAppSelector((state) => state.csrf.data)
-    const dispatch = useAppDispatch()
+    const csrf = useCsrf()
+    const [restorePswd, { isLoading, isError, error }] = useRestorePswdMutation()
+    const responseStatus = { isLoading, isError, error }
 
     const methods = useForm({
         resolver: zodResolver(passwordSchema),
         mode: 'all',
         defaultValues: {
-            id: id,
+            id: Number(id),
             password: '',
             confirmPassword: '',
             _csrf: csrf,
@@ -32,10 +34,10 @@ export const usePasswordForm = (id: number) => {
         }
 
         if (valid?.success && valid?.data) {
-            const data = await dispatch(restorePswdThunk(valid.data)).unwrap()
+            const data = await restorePswd(valid.data).unwrap()
             if (data.success) {
                 navigate('/recovery/alert/success')
-            } else {
+            } else if (data.error) {
                 data.error.forEach((item: ConfirmValidationError) => {
                     methods.setError(item.key, {
                         type: 'server',
@@ -53,8 +55,10 @@ export const usePasswordForm = (id: number) => {
         password === '' || confirm === '' || password !== confirm
 
     useEffect(() => {
-        methods.setValue('_csrf', csrf)
+        if (csrf) {
+            methods.setValue('_csrf', csrf)
+        }
     }, [csrf])
 
-    return { methods, onSubmit, disabled }
+    return { methods, onSubmit, disabled, responseStatus }
 }
