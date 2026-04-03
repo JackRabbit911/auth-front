@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 
-import refererReducer from "./referer"
 import { authApi } from "common/api"
+import refererReducer from "./referer"
 import usernameReducer from "./username"
 
 export const store = configureStore({
