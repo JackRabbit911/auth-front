@@ -12,7 +12,5 @@ const serverValidationError = z.object({
     msg: z.string(),
 })
 
-export const serverValidationErrors = z.array(serverValidationError)
-
 export type AuthData = z.infer<typeof authData>
 export type AuthValidationError = z.infer<typeof serverValidationError>
