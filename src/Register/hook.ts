@@ -7,7 +7,7 @@ import { isObjectEmpty } from "common/utils"
 import { useAppDispatch } from "store/hooks"
 import { setUsername } from "store/username"
 import { useRegisterMutation } from "common/api"
-import { registerData, serverValidationErrors, type RegisterData, type RegisterValidationError } from "./schema"
+import { registerData, type RegisterData, type RegisterValidationError } from "./schema"
 
 export const useRegisterForm = () => {
     const navigate = useNavigate()
@@ -27,32 +27,21 @@ export const useRegisterForm = () => {
         }
     })
 
-    const onSubmit: SubmitHandler<RegisterData> = useCallback(async (data) => {
-        const valid = registerData.safeParse(data)
+    const onSubmit: SubmitHandler<RegisterData> = useCallback(async (formData) => {
+        const data = await registerFx(formData).unwrap()
 
-        if (valid?.error) {
-            console.log(valid.error, data)
-        }
-
-        if (valid?.success && valid?.data) {
-            const data = await registerFx(valid.data).unwrap()
-
-            if (data.success) {
-                dispatch(setUsername(valid.data.name))
-                navigate('/register/alert/info')
-            } else {
-                const validError = serverValidationErrors.safeParse(data.error)
-                if (validError.success === false) {
-                    console.log(validError)
-                } else if (data.error) {
-                    data.error.forEach((item: RegisterValidationError) => {
-                        methods.setError(item.key, {
-                            type: 'server',
-                            message: item.msg,
-                        })
-                    })
-                }
-            }
+        if (data.success) {
+            dispatch(setUsername(formData.name))
+            navigate('/register/alert/info')
+        } else if (Array.isArray(data?.error)) {
+            data.error.forEach((item: RegisterValidationError) => {
+                methods.setError(item.key, {
+                    type: 'server',
+                    message: item.msg,
+                })
+            })
+        } else {
+            console.error('Incorrect error structure', data?.error)
         }
     }, [])
 

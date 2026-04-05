@@ -1,13 +1,13 @@
+import { useCallback } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
-import { useCallback } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 
+import { emailSch } from "Restore/schema"
 import { isObjectEmpty } from "common/utils"
 import { useAppDispatch } from "store/hooks"
 import { setUsername } from "store/username"
 import { useEmailCheckMutation } from "common/api"
-import { emailSch, serverValidationErrors } from "Restore/schema"
 import type { Email, EmailValidationError } from "Restore/schema"
 
 export const useEmailForm = () => {
@@ -27,32 +27,21 @@ export const useEmailForm = () => {
         },
     })
 
-    const onSubmit = useCallback(async (data: Email) => {
-        const valid = emailSch.safeParse(data)
+    const onSubmit = useCallback(async (formData: Email) => {
+        const data = await emailCheck(formData).unwrap()
 
-        if (valid?.error) {
-            console.log(valid.error, data)
-        }
-
-        if (valid?.success && valid?.data) {
-            const data = await emailCheck(valid.data).unwrap()
-            
-            if (data.success) {
-                dispatch(setUsername(data?.result))
-                navigate("/recovery/alert/info")
-            } else {
-                const validError = serverValidationErrors.safeParse(data.error)
-                if (validError.success === false) {
-                    console.log(validError)
-                } else if (data.error) {
-                    data?.error.forEach((item: EmailValidationError) => {
-                        methods.setError(item.key, {
-                            type: 'server',
-                            message: item.msg,
-                        })
-                    })
-                }
-            }
+        if (data.success) {
+            dispatch(setUsername(data?.result))
+            navigate("/recovery/alert/info")
+        } else if (data.error) {
+            data?.error.forEach((item: EmailValidationError) => {
+                methods.setError(item.key, {
+                    type: 'server',
+                    message: item.msg,
+                })
+            })
+        }  else {
+            console.error('Incorrect error structure', data?.error)
         }
     }, [])
 

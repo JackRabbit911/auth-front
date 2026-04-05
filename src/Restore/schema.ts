@@ -5,12 +5,10 @@ export const emailSch = z.object({
         .min(6, { message: 'Required' })
 })
 
-export const serverValidationError = z.object({
+const serverValidationError = z.object({
     key: z.literal('email'),
     msg: z.string(),
 })
-
-export const serverValidationErrors = z.array(serverValidationError)
 
 const confirmValidationError = z.object({
     key: z.literal('confirmPassword'),

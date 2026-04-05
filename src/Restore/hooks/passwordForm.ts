@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import { isObjectEmpty } from "common/utils";
 import useCsrf from "Restore/hooks/useCsrf";
+import { isObjectEmpty } from "common/utils";
 import { useRestorePswdMutation } from "common/api";
 import { passwordSchema, type ConfirmPassword, type ConfirmValidationError } from "Restore/schema";
 
@@ -26,25 +26,19 @@ export const usePasswordForm = () => {
         }
     });
 
-    const onSubmit: SubmitHandler<ConfirmPassword> = useCallback (async (data) => {
-        const valid = passwordSchema.safeParse(data)
-
-        if (valid?.error) {
-            console.log(valid.error, data)
-        }
-
-        if (valid?.success && valid?.data) {
-            const data = await restorePswd(valid.data).unwrap()
-            if (data.success) {
-                navigate('/recovery/alert/success')
-            } else if (data.error) {
-                data.error.forEach((item: ConfirmValidationError) => {
-                    methods.setError(item.key, {
-                        type: 'server',
-                        message: item.msg,
-                    })
+    const onSubmit: SubmitHandler<ConfirmPassword> = useCallback(async (formData) => {
+        const data = await restorePswd(formData).unwrap()
+        if (data.success) {
+            navigate('/recovery/alert/success')
+        } else if (Array.isArray(data?.error)) {
+            data.error.forEach((item: ConfirmValidationError) => {
+                methods.setError(item.key, {
+                    type: 'server',
+                    message: item.msg,
                 })
-            }
+            })
+        } else {
+            console.error('Incorrect error structure', data?.error)
         }
     }, [])
 

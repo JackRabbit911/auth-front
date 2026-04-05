@@ -4,7 +4,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { isObjectEmpty } from "common/utils";
 import { useAuthMutation } from "common/api";
 import { useAppSelector } from "store/hooks";
-import { authData, serverValidationErrors, type AuthData, type AuthValidationError } from "./schema";
+import { authData, type AuthData, type AuthValidationError } from "./schema";
 
 export const useAuthForm = () => {
     const [auth, { isLoading, isError, error }] = useAuthMutation()
@@ -21,31 +21,21 @@ export const useAuthForm = () => {
         },
     })
 
-    const onSubmit: SubmitHandler<AuthData> = async (data) => {
-        const valid = authData.safeParse(data)
+    const onSubmit: SubmitHandler<AuthData> = async (formData) => {
+        const data = await auth(formData).unwrap()
 
-        if (valid?.error) {
-            console.log(valid.error, data)
-        }
-
-        if (valid?.success && valid?.data) {
-            const data = await auth(valid.data).unwrap()
-
-            if (data.success) {
-                window.location.href = referer
-            } else {
-                const validError = serverValidationErrors.safeParse(data.error)
-
-                if (validError.success === false) {
-                    console.log(validError)
-                } else if (data.error) {
-                    data.error.forEach((item: AuthValidationError) => {
-                        methods.setError(item.key, {
-                            type: 'server',
-                            message: item.msg,
-                        })
+        if (data.success) {
+            window.location.href = referer
+        } else {
+            if (Array.isArray(data?.error)) {
+                data.error.forEach((item: AuthValidationError) => {
+                    methods.setError(item.key, {
+                        type: 'server',
+                        message: item.msg,
                     })
-                }
+                })
+            } else {
+                console.error('Incorrect error structure', data?.error)
             }
         }
     }
