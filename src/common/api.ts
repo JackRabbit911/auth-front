@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { confirmUri, emailCheckUri, loginUri, passwordCheckUri, passwordSaveUri, registerUri } from 'common/constants'
+import { confirmUri, emailCheckUri, loginUri, ORIGIN, passwordCheckUri, passwordSaveUri, registerUri } from 'common/constants'
 import type { ApiResponse } from 'common/ajax/types'
 import type { AuthData, AuthValidationError } from 'Auth/schema'
 import type { RegisterData, RegisterValidationError } from 'Register/schema'
@@ -8,7 +8,7 @@ import type { ConfirmPassword, ConfirmValidationError, Email, EmailValidationErr
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost/api/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: ORIGIN + '/api/' }),
     endpoints: (builder) => ({
         auth: builder.mutation<ApiResponse<boolean, AuthValidationError[]>, AuthData>({
             query: (authData) => ({

@@ -3,6 +3,7 @@ import { detectLangByAttribute } from "./utils"
 import { fetchTranslate } from "./utils"
 // import { fetchAllMap } from "./utils"
 import type { GetText, TranslateType } from "./types"
+import { ORIGIN } from "common/constants"
 
 export const SUPPORTED_LANGS = {
     ru: 'Русский',
@@ -13,7 +14,7 @@ export const DEFAULT_LANG = 'ru'
 
 export const limit = null //cache limit in pairs key-valaue
 export const delay = 100 //debounse delay im ms
-export const getTranslateUri = 'http://localhost/api/gettranslate'
+export const getTranslateUri = ORIGIN + '/api/gettranslate'
 
 export const defaultTranslateKeys = ['Loading']
 
