@@ -16,6 +16,8 @@ export const useRedirect = () => {
       } else {
         navigate('/register/alert/warning')
       }
-    } 
-  }, [data])
+    } else {
+      console.log(data)
+    }
+  }, [])
 }
