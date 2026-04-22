@@ -1,9 +1,10 @@
+import Loading from "reused/Loading"
 import { useRedirect } from "./redirect"
 
 const Confirm = () => {
   useRedirect()
   
-  return <></>
+  return <Loading />
 }
 
 export default Confirm
