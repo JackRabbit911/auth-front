@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cp ../www/public/assets/output.css ./public/output.css; vite",
-    "build": "tsc -b && vite build; cp dist/assets/*.js ../www/public/assets/js/auth.js",
+    "dev": "cp ../ru/public/assets/output.css ./public/output.css; vite",
+    "build": "tsc -b && vite build; cp dist/assets/*.js ../ru/public/assets/js/auth.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { confirmUri, emailCheckUri, loginUri, ORIGIN, passwordCheckUri, passwordSaveUri, registerUri } from 'common/constants'
+import { confirmUri, emailCheckUri, host, loginUri, passwordSaveUri, registerUri } from 'common/constants'
+
 import type { ApiResponse } from 'common/ajax/types'
 import type { AuthData, AuthValidationError } from 'Auth/schema'
 import type { RegisterData, RegisterValidationError } from 'Register/schema'
@@ -8,7 +9,7 @@ import type { ConfirmPassword, ConfirmValidationError, Email, EmailValidationErr
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: ORIGIN + '/api/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: host + '/api/' }),
     endpoints: (builder) => ({
         auth: builder.mutation<ApiResponse<boolean, AuthValidationError[]>, AuthData>({
             query: (authData) => ({
@@ -23,9 +24,6 @@ export const authApi = createApi({
                 method: 'POST',
                 body: emailData,
             }),
-        }),
-        getCsrf: builder.query<ApiResponse<string>, string>({
-            query: (arg) => passwordCheckUri + '/' + arg
         }),
         restorePswd: builder.mutation<ApiResponse<boolean, ConfirmValidationError[]>, ConfirmPassword>({
             query: (pswdData) => ({
@@ -50,7 +48,6 @@ export const authApi = createApi({
 export const {
     useAuthMutation,
     useEmailCheckMutation,
-    useGetCsrfQuery,
     useRestorePswdMutation,
     useRegisterMutation,
     useRegisterConfirmQuery,
