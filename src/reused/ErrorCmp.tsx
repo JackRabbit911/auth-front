@@ -12,6 +12,8 @@ const getReasonPhrase = (status: number | string | undefined) => {
       return '403 | Forbidden'
     case 404:
       return '404 | Not found'
+    case 405:
+      return '405 | Method not allowed'
     case 500:
       return '500 | Internal server error'
     case 503:
