@@ -5,16 +5,6 @@ export const emailSch = z.object({
         .min(6, { message: 'Required' })
 })
 
-const serverValidationError = z.object({
-    key: z.literal('email'),
-    msg: z.string(),
-})
-
-const confirmValidationError = z.object({
-    key: z.literal('confirmPassword'),
-    msg: z.string(),
-})
-
 export const passwordSchema = z.object({
   id: z.number(),
   code: z.string().optional(),
@@ -26,6 +16,4 @@ export const passwordSchema = z.object({
 });
 
 export type Email = z.infer<typeof emailSch>
-export type EmailValidationError = z.infer<typeof serverValidationError>
 export type ConfirmPassword = z.infer<typeof passwordSchema>
-export type ConfirmValidationError = z.infer<typeof confirmValidationError>
