@@ -1,4 +1,3 @@
-import { useCallback } from "react"
 import { useNavigate } from "react-router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
@@ -6,13 +5,16 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { isObjectEmpty } from "common/utils"
 import { useAppDispatch } from "store/hooks"
 import { setUsername } from "store/username"
-import { useRegisterMutation } from "common/api"
-import { registerData, type RegisterData, type RegisterValidationError } from "./schema"
+import { usePostMutation } from "common/api"
+import { registerUri } from "common/constants"
+import { registerData, type RegisterData } from "./schema"
+import { useFormServerError } from "common/formServerError"
 
 export const useRegisterForm = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const [registerFx, { isLoading, isError, error }] = useRegisterMutation()
+    const [registerFx, { isLoading, isError, error }] = usePostMutation()
+    const { handleServerError } = useFormServerError<RegisterData>();
     const responseStatus = { isLoading, isError, error }
 
     const methods = useForm({
@@ -27,23 +29,28 @@ export const useRegisterForm = () => {
         }
     })
 
-    const onSubmit: SubmitHandler<RegisterData> = useCallback(async (formData) => {
-        const data = await registerFx(formData).unwrap()
+    const onSubmit: SubmitHandler<RegisterData> = async (formData) => {
+        try {
+            const arg = {
+                url: registerUri,
+                body: formData,
+            }
 
-        if (data.success) {
-            dispatch(setUsername(formData.name))
-            navigate('/register/alert/info')
-        } else if (Array.isArray(data?.error)) {
-            data.error.forEach((item: RegisterValidationError) => {
-                methods.setError(item.key, {
-                    type: 'server',
-                    message: item.msg,
-                })
-            })
-        } else {
-            console.error('Incorrect error structure', data?.error)
+            const data = await registerFx(arg).unwrap()
+
+            if (data.success) {
+                dispatch(setUsername(formData.name))
+                navigate('/register/alert/info')
+            } else {
+                console.log(data);
+            }
+        } catch (err) {
+            const isHandled = handleServerError(err, methods.setError);
+            if (!isHandled) {
+                console.error('Глобальная ошибка сервера (не 422):', err);
+            }
         }
-    }, [])
+    }
 
     const { name, email, password, confirmPassword, agree } = methods.watch()
 
