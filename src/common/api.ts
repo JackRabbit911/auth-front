@@ -1,54 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-import { confirmUri, emailCheckUri, host, loginUri, passwordSaveUri, registerUri } from 'common/constants'
-
-import type { ApiResponse } from 'common/ajax/types'
-import type { AuthData, AuthValidationError } from 'Auth/schema'
-import type { RegisterData, RegisterValidationError } from 'Register/schema'
-import type { ConfirmPassword, ConfirmValidationError, Email, EmailValidationError } from 'Restore/schema'
+import { host } from 'common/constants'
 
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({ baseUrl: host + '/api/' }),
     endpoints: (builder) => ({
-        auth: builder.mutation<ApiResponse<boolean, AuthValidationError[]>, AuthData>({
-            query: (authData) => ({
-                url: loginUri,
+         post: builder.mutation({
+            query: (arg) => ({
+                url: arg.url,
                 method: 'POST',
-                body: authData,
+                body: arg.body,
             }),
         }),
-        emailCheck: builder.mutation<ApiResponse<string, EmailValidationError[]>, Email>({
-            query: (emailData) => ({
-                url: emailCheckUri,
-                method: 'POST',
-                body: emailData,
-            }),
-        }),
-        restorePswd: builder.mutation<ApiResponse<boolean, ConfirmValidationError[]>, ConfirmPassword>({
-            query: (pswdData) => ({
-                url: passwordSaveUri,
-                method: 'POST',
-                body: pswdData,
-            }),
-        }),
-        register: builder.mutation<ApiResponse<boolean, RegisterValidationError[]>, RegisterData>({
-            query: (registerData) => ({
-                url: registerUri,
-                method: 'POST',
-                body: registerData,
-            }),
-        }),
-        registerConfirm: builder.query<ApiResponse<boolean>, string>({
-            query: (arg) => confirmUri + '/' + arg
+        get: builder.query({
+            query: (arg) => arg,
         }),
     })
 })
 
-export const {
-    useAuthMutation,
-    useEmailCheckMutation,
-    useRestorePswdMutation,
-    useRegisterMutation,
-    useRegisterConfirmQuery,
-} = authApi
+export const { usePostMutation, useGetQuery } = authApi

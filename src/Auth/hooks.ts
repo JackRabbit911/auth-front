@@ -2,12 +2,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { isObjectEmpty } from "common/utils";
-import { useAuthMutation } from "common/api";
+import { usePostMutation } from "common/api";
 import { useAppSelector } from "store/hooks";
-import { authData, type AuthData, type AuthValidationError } from "./schema";
+import { useFormServerError } from "common/formServerError";
+
+import { authData, type AuthData } from "./schema";
+import { loginUri } from "common/constants";
 
 export const useAuthForm = () => {
-    const [auth, { isLoading, isError, error }] = useAuthMutation()
+    const [auth, { isLoading, isError, error }] = usePostMutation()
+    const { handleServerError } = useFormServerError<AuthData>();
     const referer = useAppSelector((state) => state.referer.referer)
     const responseStatus = { isLoading, isError, error }
 
@@ -22,20 +26,23 @@ export const useAuthForm = () => {
     })
 
     const onSubmit: SubmitHandler<AuthData> = async (formData) => {
-        const data = await auth(formData).unwrap()
+        try {
+            const arg = {
+                url: loginUri,
+                body: formData,
+            }
 
-        if (data.success) {
-            window.location.href = referer
-        } else {
-            if (Array.isArray(data?.error)) {
-                data.error.forEach((item: AuthValidationError) => {
-                    methods.setError(item.key, {
-                        type: 'server',
-                        message: item.msg,
-                    })
-                })
+            const data = await auth(arg).unwrap()
+
+            if (data.success) {
+                window.location.href = referer
             } else {
-                console.error('Incorrect error structure', data?.error)
+                console.log(data);
+            }
+        } catch (err) {
+            const isHandled = handleServerError(err, methods.setError);
+            if (!isHandled) {
+                console.error('Глобальная ошибка сервера (не 422):', err);
             }
         }
     }

@@ -22,7 +22,7 @@ const ErrorOrPending = ({ responseStatus, children }: Props) => {
 
     return (
       <>
-        {isLoading ? <Loading /> : (isError ? <ErrorCmp status={status} /> : children)}
+        {isLoading ? <Loading /> : (isError && status !== 422 ? <ErrorCmp status={status} /> : children)}
       </>
     )
   }
