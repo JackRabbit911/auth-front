@@ -21,10 +21,12 @@ const Auth = () => {
           <TextInput
             fieldName="email"
             label="Email"
+            autoComplete="email"
           />
           <TextInput
             fieldName="password"
             type="password"
+            autoComplete="current-password"
             label={__('Password')}
             optional={__("min % symbols", 5)}
           />
