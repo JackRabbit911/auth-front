@@ -20,21 +20,25 @@ const Register = () => {
           <TextInput
             fieldName="name"
             label="Username"
+            autoComplete="username"
           />
           <TextInput
             fieldName="email"
             label="Email"
+            autoComplete="email"
           />
           <TextInput
             fieldName="password"
             type="password"
             label={__('Password')}
+            autoComplete="new-password"
             optional={__("min % symbols", 5)}
           />
           <TextInput
             fieldName="confirmPassword"
             type="password"
             label={__('Confirm password')}
+            autoComplete="new-password"
           />
           <CheckBox
             fieldName="agree"
