@@ -2,9 +2,10 @@ import Alert from "reused/Alert";
 import Info from "reused/icons/Info";
 import { useAppSelector } from "store/hooks";
 import { useTranslate } from "common/i18n/hooks";
+import { Link } from "react-router";
 
 const RegisterInfo = () => {
-  const username = useAppSelector((state) => state.username.name)
+  const { name, code } = useAppSelector((state) => state.username)
   const __ = useTranslate()
 
   return (
@@ -16,7 +17,7 @@ const RegisterInfo = () => {
         Очень хорошо!
       </h3>
       <h4 className="text-md font-bold">
-        Ув., {username}!
+        Ув., {name}!
       </h4>
       <p>
         {__('info_register')}
@@ -27,6 +28,13 @@ const RegisterInfo = () => {
         </span>
         Если не найдёте письмо во Входящих, поищите в папке Спам
       </p>
+      {code && <p>
+        <span className="link font-medium">
+          <Link to={`/register/confirm/${code}`}>
+            В режиме тестирования пройдите по этой ссылке
+          </Link>
+        </span>
+      </p>}
     </Alert>
 
   )
