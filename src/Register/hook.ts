@@ -39,7 +39,7 @@ export const useRegisterForm = () => {
             const data = await registerFx(arg).unwrap()
 
             if (data.success) {
-                dispatch(setUsername(formData.name))
+                dispatch(setUsername(data?.result))
                 navigate('/register/alert/info')
             } else {
                 console.log(data);
