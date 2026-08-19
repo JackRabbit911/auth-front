@@ -7,12 +7,13 @@ type Props = {
   label: string;
   optional?: string;
   placeholder?: string;
+  autoComplete?: React.HTMLInputAutoCompleteAttribute;
   type?: string;
   max?: string;
 }
 
 const TextInput = ({
-  fieldName, label, optional, placeholder, type = 'text', max
+  fieldName, label, optional, placeholder, autoComplete, type = 'text', max
 }: Props) => {
   const { register, formState: { errors } } = useFormContext();
   const err = getObjectProp(errors, fieldName)
@@ -41,6 +42,7 @@ const TextInput = ({
         {...register(fieldName)}
         placeholder={placeholder}
         className={inputClassName}
+        autoComplete={autoComplete}
         max={max}
       />
     </fieldset>
