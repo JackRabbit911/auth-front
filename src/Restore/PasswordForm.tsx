@@ -5,9 +5,11 @@ import TextInput from "reused/TextInput";
 import ErrorOrPending from "reused/ErrorOrPendig";
 import { usePasswordForm } from "./hooks/passwordForm";
 import { useTranslate } from "common/i18n/hooks";
+import { useAppSelector } from "store/hooks";
 
 const PasswordForm = () => {
   const { methods, onSubmit, disabled, responseStatus } = usePasswordForm()
+  const username = useAppSelector((state) => state.username.name)
   const __ = useTranslate()
 
   return (
@@ -18,15 +20,18 @@ const PasswordForm = () => {
         </h3>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <CSRF />
+          <input type="hidden" name="username" value={username} />
           <TextInput
             type="password"
             fieldName="password"
             label={__('Password')}
+            autoComplete="new-password"
           />
           <TextInput
             type="password"
             fieldName="confirmPassword"
             label={__('Confirm')}
+            autoComplete="new-password"
           />
           <button
             type="submit"
